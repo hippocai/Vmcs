@@ -26,7 +26,33 @@ import java.io.IOException;
  * @version 3.0 5/07/2003
  * @author Olivo Miotto, Pang Ping Li
  */
-public abstract class Store {
+public abstract class Store implements Container<StoreItem>{
+	@Override
+	public Iterator<StoreItem> getIterator(){
+		return new StoreIterator();
+	}
+	
+	private class StoreIterator implements Iterator<StoreItem> {
+		private int index=0;
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return items!=null&&index<items.length;
+		}
+
+		@Override
+		public StoreItem next() {
+			// TODO Auto-generated method stub
+			if(items==null||index>=items.length){
+				return null;
+			}
+			
+			StoreItem item=items[index];
+			++index;
+			return item;
+		}
+
+	}
 	/**This constant attribute represent Cash*/
 	public final static int CASH  = 1;
 	/**This constant attribute represnet Drink*/
@@ -62,7 +88,7 @@ public abstract class Store {
 	 * This method returns the {@link StoreItem} corresponding to the index entered.
 	 * @return the array of {@link StoreItem}.
 	 */
-	public StoreItem[] getItems() {
+	private StoreItem[] getItems() {
 		return items;
 	}
 

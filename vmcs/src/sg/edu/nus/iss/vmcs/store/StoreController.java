@@ -97,11 +97,11 @@ public class StoreController {
 	 * @param type the type of Store.
 	 * @return an array of StoreItem.
 	 */
-	public StoreItem[] getStoreItems(int type) {
+	public Iterator<StoreItem> getStoreIterator(int type) {
 		if (type == Store.CASH)
-			return cStore.getItems();
+			return cStore.getIterator();
 		else
-			return dStore.getItems();
+			return dStore.getIterator();
 	}
 
 	/**

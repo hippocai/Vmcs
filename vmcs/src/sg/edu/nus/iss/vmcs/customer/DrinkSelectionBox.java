@@ -14,6 +14,7 @@ import java.awt.Panel;
 
 import sg.edu.nus.iss.vmcs.store.DrinksBrand;
 import sg.edu.nus.iss.vmcs.store.DrinksStoreItem;
+import sg.edu.nus.iss.vmcs.store.Iterator;
 import sg.edu.nus.iss.vmcs.store.Store;
 import sg.edu.nus.iss.vmcs.store.StoreController;
 import sg.edu.nus.iss.vmcs.store.StoreItem;
@@ -40,13 +41,14 @@ public class DrinkSelectionBox extends Panel{
 		MainController mainCtrl=txCtrl.getMainController();
 		StoreController storeCtrl=mainCtrl.getStoreController();
 		int drinkStoreSize=storeCtrl.getStoreSize(Store.DRINK);
-		StoreItem[] drinkStoreItems=storeCtrl.getStore(Store.DRINK).getItems();
-		
+		//StoreItem[] drinkStoreItems=storeCtrl.getStore(Store.DRINK).getItems();
+		Iterator<StoreItem> iter=storeCtrl.getStore(Store.DRINK).getIterator();
 		drinkSelectionItems=new DrinkSelectionItem[drinkStoreSize];
 		
 		setLayout(new GridBagLayout());
-		for(int i=0;i<drinkStoreItems.length;i++){
-			StoreItem storeItem=drinkStoreItems[i];
+		int i=0;
+		while(iter.hasNext()){
+			StoreItem storeItem=iter.next();
 			DrinksStoreItem drinksStoreItem=(DrinksStoreItem)storeItem;
 			StoreObject storeObject=drinksStoreItem.getContent();
 			DrinksBrand drinksBrand=(DrinksBrand)storeObject;
@@ -58,6 +60,7 @@ public class DrinkSelectionBox extends Panel{
 			add(drinkSelectionItems[i],new GridBagConstraints(0,i,1,1,1.0,0.0,
 				    GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,
 				    new Insets(5,0,0,0),10,0));  
+			++i;
 		}
 	}
 	
