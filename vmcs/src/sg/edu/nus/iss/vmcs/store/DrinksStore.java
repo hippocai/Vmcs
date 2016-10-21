@@ -30,7 +30,7 @@ public class DrinksStore extends Store {
 	/**
 	 * This constructor creates an instance of DrinksStore object.
 	 */
-    public DrinksStore() {
+    private DrinksStore() {
     }
     
     //Singleton Pattern

@@ -31,7 +31,7 @@ public class CashStore extends Store {
 	/**
 	 * This constructor creates an instance of the CashStore object.
 	 */
-	public CashStore() {
+	private CashStore() {
 	}
 	
 	//Singleton Pattern
