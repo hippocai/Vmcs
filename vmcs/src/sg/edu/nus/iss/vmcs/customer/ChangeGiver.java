@@ -73,6 +73,7 @@ public class ChangeGiver {
 				txCtrl.getCustomerPanel().displayChangeStatus(true);
 		}
 		catch(VMCSException ex){
+			txCtrl.setTransactionState(txCtrl.getSuspendTransactionState());
 			txCtrl.terminateFault();
 			return false;
 		}

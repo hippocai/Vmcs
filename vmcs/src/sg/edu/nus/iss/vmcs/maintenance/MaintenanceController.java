@@ -99,6 +99,7 @@ public class MaintenanceController {
 			MachineryController machctrl = mCtrl.getMachineryController();
 			machctrl.setDoorState(false);
 			//Terminate customer transaction
+			mCtrl.getTransactionController().setTransactionState(mCtrl.getTransactionController().getSuspendTransactionState());
 			mCtrl.getTransactionController().terminateTransaction();
 		}
 	}

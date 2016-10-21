@@ -31,6 +31,7 @@ public class TerminateButtonListener implements ActionListener{
 	 * This method performs actions in response to the terminate button being pressed.
 	 */
 	public void actionPerformed(ActionEvent ev){
+		txCtrl.setTransactionState(txCtrl.getInsetCoinState());
 		txCtrl.cancelTransaction();
 	}
 }//End of class TerminateButtonListener
