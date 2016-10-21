@@ -92,6 +92,7 @@ public class CoinReceiver {
 			txCtrl.getCustomerPanel().displayInvalidCoin(true);
 			txCtrl.getCustomerPanel().setChange("Invalid Coin");
 			//txCtrl.getCustomerPanel().setCoinInputBoxActive(false);
+			txCtrl.setTransactionState(txCtrl.getSuspendTransactionState());
 		}
 		else{
 			coin=(Coin)((CashStoreItem)cashStore.getStoreItem(idx)).getContent();
@@ -131,6 +132,7 @@ public class CoinReceiver {
 			txCtrl.getCustomerPanel().setTotalMoneyInserted(0);
 		}
 		catch(VMCSException ex){
+			txCtrl.setTransactionState(txCtrl.getSuspendTransactionState());
 			txCtrl.terminateFault();
 			return false;
 		}

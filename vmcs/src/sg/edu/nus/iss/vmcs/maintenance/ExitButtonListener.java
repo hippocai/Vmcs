@@ -30,6 +30,7 @@ public class ExitButtonListener implements ActionListener {
 	 * This method performs actions in response to the Exit Button being pressed.
 	 */
 	public void actionPerformed(ActionEvent e) {
+		this.mctrl.getMainController().getTransactionController().setTransactionState(this.mctrl.getMainController().getTransactionController().getSelectDrinkState());
 		mctrl.logoutMaintainer();
 	}
 }//End of class ExitButtonListener
