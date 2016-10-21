@@ -37,12 +37,11 @@ public class StoreController {
 	 * This constructor creates an instance of StoreController object.
 	 * @param cashLoader the cash loader.
 	 * @param drinksLoader the drinks loader.
+	 * @throws Exception 
 	 */
-	public StoreController(
-		PropertyLoader cashLoader,
-		PropertyLoader drinksLoader) {
-		CashStore.setPropertyLoader(cashLoader);
-		DrinksStore.setPropertyLoader(drinksLoader);
+	public StoreController() throws Exception {
+		CashStore.setPropertyLoader(PropertyFactory.getProp("cash"));
+		DrinksStore.setPropertyLoader(PropertyFactory.getProp("drink"));
 		
 		
 	}

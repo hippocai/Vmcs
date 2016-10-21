@@ -34,9 +34,11 @@ public class MainController {
 	/**
 	 * This constructor creates an instance of MainController object.
 	 * @param propertyFile the property file name.
+	 * @throws VMCSException 
 	 */
-	public MainController(String propertyFile) {
+	public MainController(String propertyFile) throws VMCSException {
 		this.propertyFile = propertyFile;
+		Environment.initialize(propertyFile);
 	}
 
 	/**
@@ -62,15 +64,10 @@ public class MainController {
 	 */
 	public void initialize() throws VMCSException {
 		try {
-			Environment.initialize(propertyFile);
-			PropertyLoader cashLoader =
-				new CashPropertyLoader(Environment.getCashPropFile());
-			PropertyLoader drinksLoader =
-				new DrinkPropertyLoader(Environment.getDrinkPropFile());
-			cashLoader.initialize();
-			drinksLoader.initialize();
 			
-			storeCtrl = new StoreController(cashLoader, drinksLoader);
+			
+			
+			storeCtrl = new StoreController();
 			storeCtrl.initialize();
 			simulatorCtrl = new SimulationController(this);
 			machineryCtrl = new MachineryController(this);
