@@ -32,9 +32,10 @@ public class StoreController {
         this.drinksLoader = drinksLoader;
     }
 
+    //Singleton Pattern
     public void initialize() throws IOException {
-        cStore = new CashStore();
-        dStore = new DrinksStore();
+        cStore = CashStore.getInstance();
+        dStore = DrinksStore.getInstance();
         initializeStores();
     }
 

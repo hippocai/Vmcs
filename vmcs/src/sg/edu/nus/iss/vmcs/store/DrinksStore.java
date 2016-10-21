@@ -17,7 +17,17 @@ package sg.edu.nus.iss.vmcs.store;
 
 public class DrinksStore extends Store {
 
+	private static DrinksStore drinksStore;
+	
     public DrinksStore() {
+    }
+    
+    //Singleton Pattern
+    public static DrinksStore getInstance(){
+    	if(drinksStore == null){
+    		drinksStore = new DrinksStore();
+    	}
+    	return drinksStore;
     }
 
 }
