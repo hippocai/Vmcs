@@ -26,9 +26,25 @@ package sg.edu.nus.iss.vmcs.store;
  */
 public class DrinksStore extends Store {
 
+	private static volatile DrinksStore drinksStore = null;
 	/**
 	 * This constructor creates an instance of DrinksStore object.
 	 */
-	public DrinksStore() {
-	}
+    public DrinksStore() {
+    }
+    
+    //Singleton Pattern
+    //thread safe and performance  promote
+    public static DrinksStore getInstance(){
+    	if(drinksStore == null){
+    		synchronized(DrinksStore.class){
+    			//when more than two threads run into the first null check same time
+    		    //to avoid instanced more than one time, it needs to be checked again.
+    			if(drinksStore == null){
+    	    		drinksStore = new DrinksStore();
+    			}
+    		}
+    	}
+    	return drinksStore;
+    }
 }//End of class DrinksStore

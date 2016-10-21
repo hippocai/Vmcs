@@ -26,12 +26,30 @@ package sg.edu.nus.iss.vmcs.store;
 public class CashStore extends Store {
 	/**This is the constant for coin invalid weight.*/
 	public final static int INVALID_COIN_WEIGHT = 9999;
-
+	private static volatile CashStore cashStore = null;
+	
 	/**
 	 * This constructor creates an instance of the CashStore object.
 	 */
 	public CashStore() {
 	}
+	
+	//Singleton Pattern
+    //thread safe and performance  promote
+
+    public static CashStore getInstance(){
+    	if(cashStore == null){
+    		synchronized(CashStore.class){
+    		    //when more than two threads run into the first null check same time
+    		    //to avoid instanced more than one time, it needs to be checked again.
+    			if(cashStore == null){
+    	    		cashStore = new CashStore();
+    			}
+    		}
+
+    	}
+    	return cashStore;
+    }
 	
 	/**
 	 * This method find and returns the index of the coin in the CashStore of the given Coin&#46;
