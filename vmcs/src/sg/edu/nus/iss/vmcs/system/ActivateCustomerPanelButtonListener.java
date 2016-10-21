@@ -11,29 +11,29 @@ package sg.edu.nus.iss.vmcs.system;
 import java.awt.event.*;
 
 /**
- * This control object monitors the ActivateMaintainerPanelButton and performs actions in
+ * This control object monitors the ActivateCustomerPanel Button and performs actions in
  * response to the button being pressed.
  *
  * @version 3.0 5/07/2003
  * @author Olivo Miotto, Pang Ping Li
  */
-public class ActivateMaintainerPanelButtonListener implements ActionListener {
+public class ActivateCustomerPanelButtonListener implements ActionListener {
 
 	private SimulationController ctrl;
 
 	/**
-	 * This constructor creates an instance of the ActivateMaintainerPanelButtonListener
+	 * This constructor creates an instance of the ActivateCustomerPanelButtonListener
 	 * @param ct the SimulationController
 	 */
-	public ActivateMaintainerPanelButtonListener(SimulationController ct) {
+	public ActivateCustomerPanelButtonListener(SimulationController ct) {
 		ctrl = ct;
 	}
 	
 	/**
-	 * This method performs actions in response to the Activate Maintainer Panel Button 
+	 * This method performs actions in response to the Activate Customer Panel Button 
 	 * being pressed.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		ctrl.setupMaintainer();
+		ctrl.setupCustomer();
 	}
-}//End of class ActivateMaintainerPanelButtonListener
+}//End of class ActivateCustomerPanelButtonListener
