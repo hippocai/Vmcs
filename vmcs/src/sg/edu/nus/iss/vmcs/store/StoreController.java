@@ -27,80 +27,36 @@ import java.io.IOException;
  * @author Olivo Miotto, Pang Ping Li
  */
 public class StoreController {
-	private CashStore cStore;
-	private DrinksStore dStore;
+	private Store cStore;
+	private Store dStore;
 
-	private PropertyLoader cashLoader;
-	private PropertyLoader drinksLoader;
 
+
+	
 	/**
 	 * This constructor creates an instance of StoreController object.
 	 * @param cashLoader the cash loader.
 	 * @param drinksLoader the drinks loader.
+	 * @throws Exception 
 	 */
-	public StoreController(
-		PropertyLoader cashLoader,
-		PropertyLoader drinksLoader) {
-		this.cashLoader = cashLoader;
-		this.drinksLoader = drinksLoader;
+	public StoreController() throws Exception {
+		CashStore.setPropertyLoader(PropertyFactory.getProp("cash"));
+		DrinksStore.setPropertyLoader(PropertyFactory.getProp("drink"));
+		
+		
 	}
 
 	/**
-	 * This method instantiate the {@link CashStore}, {@link DrinksStore} and initialize it.
+	 * This method instantiate the {@link CashStore}, {@link DrinksStore} and 
 	 * @throws IOException if fail to initialize stores; reading properties.
+	 * @throws IllegalAccessException 
 	 */
-	public void initialize() throws IOException {
+	public void initialize() throws IOException, IllegalAccessException {
 		cStore = CashStore.getInstance();
         dStore = DrinksStore.getInstance();
-		initializeStores();
+
 	}
 
-	/**
-	 * This method initiates the initialization of the {@link DrinkStore} and {@link CashStore}
-	 * from data read-in from an input file.
-	 * @throws IOException if fail to initialize stores; reading properties.
-	 */
-	private void initializeStores() throws IOException {
-		initializeCashStore();
-		initializeDrinkStore();
-	}
-
-	/**
-	 * This method initialize the {@link DrinksStore}.
-	 * @throws IOException if fail to initialize drinks store; reading properties.
-	 */
-	private void initializeDrinkStore() throws IOException {
-
-		// get the drink file from the environment property file;
-		int numOfItems = drinksLoader.getNumOfItems();
-		dStore.setStoreSize(numOfItems);
-
-		for (int i = 0; i < numOfItems; i++) {
-            DrinksStoreItem item = (DrinksStoreItem) drinksLoader.getItem(i);
-			StoreObject brand = item.getContent();
-			StoreObject existingBrand = dStore.findObject(brand.getName());
-			if (existingBrand != null) {
-			    item.setContent(existingBrand);
-			}
-			dStore.addItem(i, item);
-		}
-	}
-
-	/**
-	 * This method initialize the {@link CashStore}.
-	 * @throws IOException if fail to initialize cash store; reading properties.
-	 */
-	private void initializeCashStore() throws IOException {
-
-		// get the cash file from the environment property file;
-		int numOfItems = cashLoader.getNumOfItems();
-		cStore.setStoreSize(numOfItems);
-
-		for (int i = 0; i < numOfItems; i++) {
-		    CashStoreItem item = (CashStoreItem) cashLoader.getItem(i);
-			cStore.addItem(i, item);
-		}
-	}
 
 	/**
 	 * This method will instruct the {@link CashStore} to store the {@link Coin} sent as input, and
@@ -108,7 +64,17 @@ public class StoreController {
 	 * @param c the Coin to be stored.
 	 */
 	public void storeCoin(Coin c) {
-		int idx = cStore.findCashStoreIndex(c);
+		int idx;
+		idx=cStore.forEach((StoreItem item)->{
+			Coin current = (Coin) item.getContent();
+			if (current.getWeight() == c.getWeight()){
+				return false;
+			}
+		
+			return true;
+			});
+		//int idx = cStore.findCashStoreIndex(c);
+	
 		CashStoreItem item;
 		item = (CashStoreItem) this.getStoreItem(Store.CASH, idx);
 		item.increment();
@@ -239,36 +205,11 @@ public class StoreController {
 	 */
 	public void closeDown() throws IOException {
 		// save back cash property;
-		saveCashProperties();
-        saveDrinksProperties();
+		dStore.save();
+		cStore.save();
+	
 	}
 
-	/**
-	 * This method saves the attributes of the {@link CashStore} to the input file.
-	 * @throws IOException if fail to save cash properties.
-	 */
-	private void saveCashProperties() throws IOException {
-		int size = cStore.getStoreSize();
-		cashLoader.setNumOfItems(size);
-		for (int i = 0; i < size; i++) {
-			cashLoader.setItem(i, cStore.getStoreItem(i));
-		}
-		cashLoader.saveProperty();
-	}
-
-	/**
-	 * This method saves the attributes of the {@link DrinksStore} to the input file.
-	 * It saves the drink property when simulation is ended.
-	 * @throws IOException if fail to save drinks properties.
-	 */
-	private void saveDrinksProperties() throws IOException {
-		int size = dStore.getStoreSize();
-		drinksLoader.setNumOfItems(size);
-		for (int i = 0; i < size; i++) {
-			drinksLoader.setItem(i, dStore.getStoreItem(i));
-		}
-		drinksLoader.saveProperty();
-	}
 
 	/**
 	 * This method instructs the {@link DrinksStore} to dispense one drink, and then updates the 

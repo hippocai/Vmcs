@@ -32,12 +32,15 @@ public class Vmcs {
 	 * This method start the MainController.
 	 */
 	public void start() {
-		MainController mc = new MainController(propertiesFile);
+		
 		try {
+			MainController mc = new MainController(propertiesFile);
 			mc.start();
 		} catch (VMCSException e) {
 			System.out.println("Vmcs.start: Error in system initialization: "+ e.getMessage());
+			e.printStackTrace();
 			System.exit(0);
+			
 		}
 	}
 
