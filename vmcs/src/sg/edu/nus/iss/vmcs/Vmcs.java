@@ -37,7 +37,9 @@ public class Vmcs {
 			mc.start();
 		} catch (VMCSException e) {
 			System.out.println("Vmcs.start: Error in system initialization: "+ e.getMessage());
+			e.printStackTrace();
 			System.exit(0);
+			
 		}
 	}
 

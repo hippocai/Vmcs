@@ -11,8 +11,10 @@ import java.util.ArrayList;
 
 import sg.edu.nus.iss.vmcs.machinery.MachineryController;
 import sg.edu.nus.iss.vmcs.store.CashStore;
+import sg.edu.nus.iss.vmcs.store.CashStoreItem;
 import sg.edu.nus.iss.vmcs.store.Coin;
 import sg.edu.nus.iss.vmcs.store.Store;
+import sg.edu.nus.iss.vmcs.store.StoreItem;
 import sg.edu.nus.iss.vmcs.util.VMCSException;
 
 /**
@@ -74,13 +76,25 @@ public class CoinReceiver {
 	 */
 	public void receiveCoin(double weight){
 		CashStore cashStore=(CashStore)txCtrl.getMainController().getStoreController().getStore(Store.CASH);
-		Coin coin=cashStore.findCoin(weight);
-		if(coin==null){
+		Coin coin=null;
+		int idx;
+		idx=cashStore.forEach((StoreItem item)->{
+			Coin current = (Coin) item.getContent();
+			if (current.getWeight() == weight){
+				return false;
+			}
+		
+			return true;
+		});
+		
+		
+		if(idx==-1){
 			txCtrl.getCustomerPanel().displayInvalidCoin(true);
 			txCtrl.getCustomerPanel().setChange("Invalid Coin");
 			//txCtrl.getCustomerPanel().setCoinInputBoxActive(false);
 		}
 		else{
+			coin=(Coin)((CashStoreItem)cashStore.getStoreItem(idx)).getContent();
 			txCtrl.getCustomerPanel().setCoinInputBoxActive(false);
 			int value=coin.getValue();
 			txCtrl.getCustomerPanel().displayInvalidCoin(false);
