@@ -117,3 +117,5 @@ $RECYCLE.BIN/
 # Current project
 .idea/
 *.iml
+/CashPropertyFile.txt
+/DrinkPropertyFile.txt
