@@ -1,20 +1,24 @@
 package sg.edu.nus.iss.vmcs.util.uifactory;
 
-public class AWTUIFactory extends VmcsAbsrtactUiFactory{
+public class SwingUiFactory extends VmcsAbsrtactUiFactory{
+
 	@Override
-	public VmcsButton createButton(String text){
-		return new AWTButton(text);
+	public VmcsButton createButton(String text) {
+		// TODO Auto-generated method stub
+		return new SwingButton(text);
+
 	}
 
 	@Override
 	public VmcsLabel createLabel(String text) {
 		// TODO Auto-generated method stub
-		return new AWTLabel();
+		return new SwingLabel();
 	}
 
 	@Override
 	public VmcsPanel createPanel() {
 		// TODO Auto-generated method stub
-		return new AWTPanel();
+		return new SwingPanel();
 	}
+
 }
