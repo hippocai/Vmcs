@@ -17,6 +17,11 @@ package sg.edu.nus.iss.vmcs.customer;
 
 import java.awt.Frame;
 
+import sg.edu.nus.iss.vmcs.customer.state.CompleteTransactionState;
+import sg.edu.nus.iss.vmcs.customer.state.InsertCoinState;
+import sg.edu.nus.iss.vmcs.customer.state.SelectDrinkState;
+import sg.edu.nus.iss.vmcs.customer.state.SuspendTransactionState;
+import sg.edu.nus.iss.vmcs.customer.state.TransactionState;
 import sg.edu.nus.iss.vmcs.store.DrinksBrand;
 import sg.edu.nus.iss.vmcs.store.Store;
 import sg.edu.nus.iss.vmcs.store.StoreItem;
@@ -45,6 +50,12 @@ public class TransactionController {
 	/**Identifier of the selected drink.*/
 	private int selection=-1;
 	
+	private TransactionState selectDrinkState;
+	private TransactionState insetCoinState;
+	private TransactionState completeTransactionState;
+	private TransactionState suspendTransactionState;
+	private TransactionState currentState;
+	
 	/**
 	 * This constructor creates an instance of the TransactionController.
 	 * @param mainCtrl the MainController.
@@ -54,6 +65,12 @@ public class TransactionController {
 		dispenseCtrl=new DispenseController(this);
 		coinReceiver=new CoinReceiver(this);
 		changeGiver=new ChangeGiver(this);
+		
+		selectDrinkState = new SelectDrinkState(this);
+		insetCoinState = new InsertCoinState(this);
+		completeTransactionState = new CompleteTransactionState(this);
+		suspendTransactionState = new SuspendTransactionState(this);
+		currentState = selectDrinkState;
 	}
 
 	/**
@@ -95,16 +112,18 @@ public class TransactionController {
 	 * @param drinkIdentifier the drink brand item identifier.
 	 */
 	public void startTransaction(int drinkIdentifier){
-		setSelection(drinkIdentifier);
-		StoreItem storeItem=mainCtrl.getStoreController().getStoreItem(Store.DRINK,drinkIdentifier);
-		DrinksBrand drinksBrand=(DrinksBrand)storeItem.getContent();
-		setPrice(drinksBrand.getPrice());
-		changeGiver.resetChange();
-		dispenseCtrl.ResetCan();
-		changeGiver.displayChangeStatus();
-		dispenseCtrl.allowSelection(false);
-		coinReceiver.startReceiver();
-		custPanel.setTerminateButtonActive(true);
+//		setSelection(drinkIdentifier);
+//		StoreItem storeItem=mainCtrl.getStoreController().getStoreItem(Store.DRINK,drinkIdentifier);
+//		DrinksBrand drinksBrand=(DrinksBrand)storeItem.getContent();
+//		setPrice(drinksBrand.getPrice());
+//		changeGiver.resetChange();
+//		dispenseCtrl.ResetCan();
+//		changeGiver.displayChangeStatus();
+//		dispenseCtrl.allowSelection(false);
+//		coinReceiver.startReceiver();
+//		custPanel.setTerminateButtonActive(true);
+		
+		this.currentState.startTransaction(drinkIdentifier);
 	}
 	
 	/**
@@ -121,11 +140,12 @@ public class TransactionController {
 	 * @param total the total money received&#46;
 	 */
 	public void processMoneyReceived(int total){
-		if(total>=price)
-			completeTransaction();
-		else{
-			coinReceiver.continueReceive();
-		}
+//		if(total>=price)
+//			completeTransaction();
+//		else{
+//			coinReceiver.continueReceive();
+//		}
+		this.currentState.processMoneyReceived(total);
 	}
 	
 	/**
@@ -142,21 +162,22 @@ public class TransactionController {
 	 * 4- Reset the Drink Selection Box to allow further transactions.
 	 */
 	public void completeTransaction(){
-		System.out.println("CompleteTransaction: Begin");
-		dispenseCtrl.dispenseDrink(selection);
-		int totalMoneyInserted=coinReceiver.getTotalInserted();
-		int change=totalMoneyInserted-price;
-		if(change>0){
-			changeGiver.giveChange(change);
-		}
-		else{
-			getCustomerPanel().setChange(0);
-		}
-		coinReceiver.storeCash();
-		dispenseCtrl.allowSelection(true);
-		
-		refreshMachineryDisplay();
-		System.out.println("CompleteTransaction: End");
+//		System.out.println("CompleteTransaction: Begin");
+//		dispenseCtrl.dispenseDrink(selection);
+//		int totalMoneyInserted=coinReceiver.getTotalInserted();
+//		int change=totalMoneyInserted-price;
+//		if(change>0){
+//			changeGiver.giveChange(change);
+//		}
+//		else{
+//			getCustomerPanel().setChange(0);
+//		}
+//		coinReceiver.storeCash();
+//		dispenseCtrl.allowSelection(true);
+//		
+//		refreshMachineryDisplay();
+//		System.out.println("CompleteTransaction: End");
+		this.currentState.completeTransaction();
 	}
 	
 	/**
@@ -166,11 +187,12 @@ public class TransactionController {
 	 * money inserted by the customer.
 	 */
 	public void terminateFault(){
-		System.out.println("TerminateFault: Begin");
-		dispenseCtrl.allowSelection(false);
-		coinReceiver.refundCash();
-		refreshMachineryDisplay();
-		System.out.println("TerminateFault: End");
+//		System.out.println("TerminateFault: Begin");
+//		dispenseCtrl.allowSelection(false);
+//		coinReceiver.refundCash();
+//		refreshMachineryDisplay();
+//		System.out.println("TerminateFault: End");
+		this.currentState.terminateFault();
 	}
 	
 	/**
@@ -186,27 +208,29 @@ public class TransactionController {
 	 * 3- The DrinkSelectionBox is then reset to allow further transactions&#46;
 	 */
 	public void terminateTransaction(){
-		System.out.println("TerminateTransaction: Begin");
-		dispenseCtrl.allowSelection(false);
-		coinReceiver.stopReceive();
-		coinReceiver.refundCash();
-		if(custPanel!=null){
-			custPanel.setTerminateButtonActive(false);
-		}
-		refreshMachineryDisplay();
-		System.out.println("TerminateTransaction: End");
+//		System.out.println("TerminateTransaction: Begin");
+//		dispenseCtrl.allowSelection(false);
+//		coinReceiver.stopReceive();
+//		coinReceiver.refundCash();
+//		if(custPanel!=null){
+//			custPanel.setTerminateButtonActive(false);
+//		}
+//		refreshMachineryDisplay();
+//		System.out.println("TerminateTransaction: End");
+		this.currentState.terminateTransaction();
 	}
 	
 	/**
 	 * This method will cancel an ongoing customer transaction.
 	 */
 	public void cancelTransaction(){
-		System.out.println("CancelTransaction: Begin");
-		coinReceiver.stopReceive();
-		coinReceiver.refundCash();
-		dispenseCtrl.allowSelection(true);
-		refreshMachineryDisplay();
-		System.out.println("CancelTransaction: End");
+//		System.out.println("CancelTransaction: Begin");
+//		coinReceiver.stopReceive();
+//		coinReceiver.refundCash();
+//		dispenseCtrl.allowSelection(true);
+//		refreshMachineryDisplay();
+//		System.out.println("CancelTransaction: End");
+		this.currentState.cancelTransaction();
 	}
 	
 	/**
@@ -343,4 +367,47 @@ public class TransactionController {
 	public void nullifyCustomerPanel(){
 		custPanel=null;
 	}
+
+	public TransactionState getSelectDrinkState() {
+		return selectDrinkState;
+	}
+
+	public void setSelectDrinkState(TransactionState selectDrinkState) {
+		this.selectDrinkState = selectDrinkState;
+	}
+
+	public TransactionState getInsetCoinState() {
+		return insetCoinState;
+	}
+
+	public void setInsetCoinState(TransactionState insetCoinState) {
+		this.insetCoinState = insetCoinState;
+	}
+
+	public TransactionState getCompleteTransactionState() {
+		return completeTransactionState;
+	}
+
+	public void setCompleteTransactionState(TransactionState completeTransactionState) {
+		this.completeTransactionState = completeTransactionState;
+	}
+
+	public TransactionState getSuspendTransactionState() {
+		return suspendTransactionState;
+	}
+
+	public void setSuspendTransactionState(TransactionState suspendTransactionState) {
+		this.suspendTransactionState = suspendTransactionState;
+	}
+
+	public TransactionState getCurrentState() {
+		return currentState;
+	}
+
+	public void setTransactionState(TransactionState currentState) {
+		System.out.println("Transaction state changed to "+ currentState.getClass().getName());
+		this.currentState = currentState;
+	}
+	
+	
 }//End of class TransactionController

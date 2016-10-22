@@ -121,6 +121,7 @@ public class DispenseController {
 			txCtrl.getCustomerPanel().getDrinkSelectionBox().update(selectedBrand, quantity, price, drinksName);
 		}
 		catch(VMCSException ex){
+			txCtrl.setTransactionState(txCtrl.getSuspendTransactionState());
 			txCtrl.terminateFault();
 			return false;
 		}

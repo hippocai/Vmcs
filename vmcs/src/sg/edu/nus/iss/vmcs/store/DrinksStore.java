@@ -30,21 +30,46 @@ public class DrinksStore extends Store {
 	/**
 	 * This constructor creates an instance of DrinksStore object.
 	 */
-    private DrinksStore() {
+	private static PropertyLoader loader;
+	public static void setPropertyLoader(PropertyLoader propertyLoader){
+		loader=propertyLoader;
+	}
+    private DrinksStore(PropertyLoader loader) {
+    	super(loader);
     }
     
     //Singleton Pattern
     //thread safe and performance  promote
-    public static DrinksStore getInstance(){
+    public static DrinksStore getInstance() throws IllegalAccessException{
+    	if(loader==null){
+    		throw new IllegalAccessException("Please Set PropertyLoader");
+    	}
     	if(drinksStore == null){
     		synchronized(DrinksStore.class){
     			//when more than two threads run into the first null check same time
     		    //to avoid instanced more than one time, it needs to be checked again.
     			if(drinksStore == null){
-    	    		drinksStore = new DrinksStore();
+    	    		drinksStore = new DrinksStore(loader);
     			}
     		}
     	}
     	return drinksStore;
     }
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		int numOfItems = loader.getNumOfItems();
+		setStoreSize(numOfItems);
+
+		for (int i = 0; i < numOfItems; i++) {
+            DrinksStoreItem item = (DrinksStoreItem) loader.getItem(i);
+			StoreObject brand = item.getContent();
+			StoreObject existingBrand = findObject(brand.getName());
+			if (existingBrand != null) {
+			    item.setContent(existingBrand);
+			}
+			addItem(i, item);	
+		}
+	}
 }//End of class DrinksStore

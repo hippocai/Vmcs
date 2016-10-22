@@ -9,6 +9,7 @@ package sg.edu.nus.iss.vmcs.customer;
 
 import sg.edu.nus.iss.vmcs.store.CashStoreItem;
 import sg.edu.nus.iss.vmcs.store.Coin;
+import sg.edu.nus.iss.vmcs.store.Iterator;
 import sg.edu.nus.iss.vmcs.store.Store;
 import sg.edu.nus.iss.vmcs.store.StoreController;
 import sg.edu.nus.iss.vmcs.store.StoreItem;
@@ -73,6 +74,7 @@ public class ChangeGiver {
 				txCtrl.getCustomerPanel().displayChangeStatus(true);
 		}
 		catch(VMCSException ex){
+			txCtrl.setTransactionState(txCtrl.getSuspendTransactionState());
 			txCtrl.terminateFault();
 			return false;
 		}
@@ -90,9 +92,10 @@ public class ChangeGiver {
 		boolean isAnyDenoEmpty=false;
 		MainController mainCtrl=txCtrl.getMainController();
 		StoreController storeCtrl=mainCtrl.getStoreController();
-		StoreItem[] cashStoreItems=storeCtrl.getStore(Store.CASH).getItems();
-		for(int i=0;i<cashStoreItems.length;i++){
-			StoreItem storeItem=cashStoreItems[i];
+		//StoreItem[] cashStoreItems=storeCtrl.getStore(Store.CASH).getItems();
+		Iterator<StoreItem> iter=storeCtrl.getStore(Store.CASH).getIterator();
+		while(iter.hasNext()){
+			StoreItem storeItem=iter.next();
 			CashStoreItem cashStoreItem=(CashStoreItem)storeItem;
 			int quantity=cashStoreItem.getQuantity();
 			if(quantity==0)

@@ -7,6 +7,8 @@
  */
 package sg.edu.nus.iss.vmcs.store;
 
+import java.io.IOException;
+
 /**
  * This entity object implements a generic Store&#46; It has methods to load (add) {@link StoreItem}
  * into the Store and release {@link StoreItem} from the Store.
@@ -24,7 +26,33 @@ package sg.edu.nus.iss.vmcs.store;
  * @version 3.0 5/07/2003
  * @author Olivo Miotto, Pang Ping Li
  */
-public abstract class Store {
+public abstract class Store implements Container<StoreItem>{
+	@Override
+	public Iterator<StoreItem> getIterator(){
+		return new StoreIterator();
+	}
+	
+	private class StoreIterator implements Iterator<StoreItem> {
+		private int index=0;
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return items!=null&&index<items.length;
+		}
+
+		@Override
+		public StoreItem next() {
+			// TODO Auto-generated method stub
+			if(items==null||index>=items.length){
+				return null;
+			}
+			
+			StoreItem item=items[index];
+			++index;
+			return item;
+		}
+
+	}
 	/**This constant attribute represent Cash*/
 	public final static int CASH  = 1;
 	/**This constant attribute represnet Drink*/
@@ -32,28 +60,26 @@ public abstract class Store {
 	/**This attribute hold the size of the store*/
 	protected int size;
     /**This attribute hold the items of the store*/
+	public interface ItemsIter{
+		public boolean each(StoreItem item);
+	}
 	protected StoreItem items[];
-
+	protected PropertyLoader loader;
 	/**
 	 * This constructor creates an instance of Store object.
 	 */
-	public Store() {
+	public Store(PropertyLoader loader) {
+		this.loader=loader;
+		init();
 	}
 
-	/**
-	 * This constructor creates an instance of Store object.
-	 * @param itemn the number of item.
-	 */
-	public Store(int itemn) {
-		size = itemn;
-		items = new StoreItem[size];
-	}
 
+	public abstract void init();
 	/**
 	 * This method sets the size of the items array in the Store.
 	 * @param sz the store size.
 	 */
-	public void setStoreSize(int sz) {
+	protected void setStoreSize(int sz) {
 		size = sz;
 		items = new StoreItem[size];
 	}
@@ -62,7 +88,7 @@ public abstract class Store {
 	 * This method returns the {@link StoreItem} corresponding to the index entered.
 	 * @return the array of {@link StoreItem}.
 	 */
-	public StoreItem[] getItems() {
+	private StoreItem[] getItems() {
 		return items;
 	}
 
@@ -130,5 +156,27 @@ public abstract class Store {
 	 */
 	public int getStoreSize() {
 		return size;
+	}
+	
+	public int forEach(ItemsIter iter){
+		for (int i = 0; i < size; i++) {
+			if(!iter.each(items[i])){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public void save(){
+		try {
+			loader.setNumOfItems(this.getStoreSize());
+			for (int i = 0; i < size; i++) {
+				loader.setItem(i, getStoreItem(i));
+			}
+			loader.saveProperty();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }//End of class Store

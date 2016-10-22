@@ -27,77 +27,46 @@ public class CashStore extends Store {
 	/**This is the constant for coin invalid weight.*/
 	public final static int INVALID_COIN_WEIGHT = 9999;
 	private static volatile CashStore cashStore = null;
-	
+	private static PropertyLoader loader;
+	public static void setPropertyLoader(PropertyLoader propertyLoader){
+		loader=propertyLoader;
+	}
 	/**
 	 * This constructor creates an instance of the CashStore object.
 	 */
-	private CashStore() {
+	private CashStore(PropertyLoader loader) {
+		super(loader);
 	}
 	
 	//Singleton Pattern
     //thread safe and performance  promote
 
-    public static CashStore getInstance(){
+    public static CashStore getInstance() throws IllegalAccessException{
+    	if(loader==null){
+    		throw new IllegalAccessException("Please Set PropertyLoader");
+    	}
     	if(cashStore == null){
     		synchronized(CashStore.class){
     		    //when more than two threads run into the first null check same time
     		    //to avoid instanced more than one time, it needs to be checked again.
     			if(cashStore == null){
-    	    		cashStore = new CashStore();
+    	    		cashStore = new CashStore(loader);
     			}
     		}
 
     	}
     	return cashStore;
     }
-	
-	/**
-	 * This method find and returns the index of the coin in the CashStore of the given Coin&#46;
-	 * @param c the Coin of interest&#46;
-	 * @return the index of the given Coin&#46; Return -1 if unknown Coin is detected.
-	 */
-	public int findCashStoreIndex (Coin c) {
-		int size = getStoreSize();
-		for (int i = 0; i < size; i++) {
-			StoreItem item = (CashStoreItem) getStoreItem(i);
-			Coin current = (Coin) item.getContent();
-			if (current.getWeight() == c.getWeight())
-				return i;
-		}
-		return -1;
-	}
 
-	/**
-	 * This method determine whether the given weight of the {@link Coin} is valid.
-	 * @param weight the weight of the Coin to be tested.
-	 * @return TRUE if the weight is valid, otherwise, return FALSE.
-	 */
-	public boolean isValidWeight(double weight){
-		int size = getStoreSize();
-		for (int i = 0; i < size; i++) {
-			StoreItem item = (CashStoreItem) getStoreItem(i);
-			Coin current = (Coin) item.getContent();
-			if (current.getWeight() == weight)
-				return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * This method will locate a {@link Coin} denomination held, with the input data 
-	 * (coin weight)&#46; If found, it returns an existence identifier (reference)&#46;
-	 * Otherwise, it informs the requestor that the coin is invalid.
-	 * @param weight the weight of the coin to be found.
-	 * @return Coin the coin which has the input weight.
-	 */
-	public Coin findCoin(double weight){
-		int size = getStoreSize();
-		for (int i = 0; i < size; i++) {
-			StoreItem item = (CashStoreItem) getStoreItem(i);
-			Coin current = (Coin) item.getContent();
-			if (current.getWeight() == weight)
-				return current;
-		}
-		return null;
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		int numOfItems = loader.getNumOfItems();
+		setStoreSize(numOfItems);
+
+		for (int i = 0; i < numOfItems; i++) {
+		    CashStoreItem item = (CashStoreItem) loader.getItem(i);
+			addItem(i, item);
+		}	
 	}
 }//End of class CashStore
