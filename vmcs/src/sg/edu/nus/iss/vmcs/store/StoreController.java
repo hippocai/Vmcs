@@ -42,6 +42,7 @@ public class StoreController {
 	public StoreController() throws Exception {
 		CashStore.setPropertyLoader(PropertyFactory.getProp("cash"));
 		DrinksStore.setPropertyLoader(PropertyFactory.getProp("drink"));
+		initialize();
 		
 		
 	}

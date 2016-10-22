@@ -64,11 +64,7 @@ public class MainController {
 	 */
 	public void initialize() throws VMCSException {
 		try {
-			
-			
-			
 			storeCtrl = new StoreController();
-			storeCtrl.initialize();
 			simulatorCtrl = new SimulationController(this);
 			machineryCtrl = new MachineryController(this);
 			machineryCtrl.initialize();
