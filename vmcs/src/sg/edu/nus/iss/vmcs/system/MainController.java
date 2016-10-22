@@ -29,15 +29,12 @@ public class MainController {
 	private TransactionController txCtrl;
 	private StoreController       storeCtrl;
 
-	private String      propertyFile;
-
 	/**
 	 * This constructor creates an instance of MainController object.
 	 * @param propertyFile the property file name.
 	 * @throws VMCSException 
 	 */
 	public MainController(String propertyFile) throws VMCSException {
-		this.propertyFile = propertyFile;
 		Environment.initialize(propertyFile);
 	}
 
