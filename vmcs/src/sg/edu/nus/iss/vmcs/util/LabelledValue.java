@@ -15,6 +15,9 @@ import java.awt.Insets;
 import java.awt.Label;
 import java.awt.Panel;
 
+import sg.edu.nus.iss.vmcs.util.uifactory.AWTUIFactory;
+import sg.edu.nus.iss.vmcs.util.uifactory.VmcsAbsrtactUiFactory;
+
 /**
  * This boundary object displays an updatable label next to a fixed label.
  * @version 1.0 2008-10-01
@@ -22,6 +25,7 @@ import java.awt.Panel;
  */
 
 public class LabelledValue extends Panel {
+	private AWTUIFactory AwtFactory = new AWTUIFactory();
 	private Label lbl1;
 	private Label lbl2;
 
@@ -32,8 +36,11 @@ public class LabelledValue extends Panel {
 	 * @param width the width of the updatable label.
 	 */
 	public LabelledValue(String name, String value, int width) {
-		lbl1=new Label(name);
-		lbl2=new Label(value);
+		//lbl1=new Label(name);
+		//lbl2=new Label(value);
+		
+		lbl1 = (Label) AwtFactory.createLabel(name);
+		lbl2 = (Label) AwtFactory.createLabel(value);
 		
 		lbl1.setAlignment(Label.CENTER);
 		lbl2.setBackground(Color.lightGray);

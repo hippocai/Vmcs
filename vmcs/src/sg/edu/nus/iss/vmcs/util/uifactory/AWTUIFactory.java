@@ -9,7 +9,7 @@ public class AWTUIFactory extends VmcsAbsrtactUiFactory{
 	@Override
 	public VmcsLabel createLabel(String text) {
 		// TODO Auto-generated method stub
-		return new AWTLabel();
+		return new AWTLabel(text);
 	}
 
 	@Override

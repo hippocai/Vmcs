@@ -5,4 +5,7 @@ import java.awt.Label;
 
 public class AWTLabel extends Label implements VmcsLabel {
 
+	public AWTLabel(String text) {
+		super(text);
+	}
 }
