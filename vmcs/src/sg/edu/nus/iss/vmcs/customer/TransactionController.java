@@ -22,6 +22,8 @@ import sg.edu.nus.iss.vmcs.customer.state.InsertCoinState;
 import sg.edu.nus.iss.vmcs.customer.state.SelectDrinkState;
 import sg.edu.nus.iss.vmcs.customer.state.SuspendTransactionState;
 import sg.edu.nus.iss.vmcs.customer.state.TransactionState;
+import sg.edu.nus.iss.vmcs.customer.strategy.MoneyValidateStrategy;
+import sg.edu.nus.iss.vmcs.customer.strategy.WeightStrategy;
 import sg.edu.nus.iss.vmcs.store.DrinksBrand;
 import sg.edu.nus.iss.vmcs.store.Store;
 import sg.edu.nus.iss.vmcs.store.StoreItem;
@@ -63,7 +65,8 @@ public class TransactionController {
 	public TransactionController(MainController mainCtrl) {
 		this.mainCtrl = mainCtrl;
 		dispenseCtrl=new DispenseController(this);
-		coinReceiver=new CoinReceiver(this);
+		MoneyValidateStrategy mondyValidater = new WeightStrategy();
+		coinReceiver=new CoinReceiver(this, mondyValidater);
 		changeGiver=new ChangeGiver(this);
 		
 		selectDrinkState = new SelectDrinkState(this);

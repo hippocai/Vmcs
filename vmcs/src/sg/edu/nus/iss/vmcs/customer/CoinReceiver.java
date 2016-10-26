@@ -9,6 +9,8 @@ package sg.edu.nus.iss.vmcs.customer;
 
 import java.util.ArrayList;
 
+import sg.edu.nus.iss.vmcs.customer.strategy.MoneyValidateStrategy;
+import sg.edu.nus.iss.vmcs.customer.strategy.ValidateItem;
 import sg.edu.nus.iss.vmcs.machinery.MachineryController;
 import sg.edu.nus.iss.vmcs.store.CashStore;
 import sg.edu.nus.iss.vmcs.store.CashStoreItem;
@@ -30,14 +32,17 @@ public class CoinReceiver {
 	/**Total amount of money entered so far during current transaction.*/
 	private int totalInserted;
 	
+	private MoneyValidateStrategy mondyValidater;
+	
 	/**
 	 * This constructor creates an instance of the object.
 	 * @param txCtrl the transaction controller.
 	 */
-	public CoinReceiver(TransactionController txCtrl){
+	public CoinReceiver(TransactionController txCtrl, MoneyValidateStrategy mondyValidater){
 		this.txCtrl=txCtrl;
 		arlCoins=new ArrayList();
 		setTotalInserted(0);
+		this.mondyValidater = mondyValidater;
 	}
 	
 	/**
@@ -74,17 +79,13 @@ public class CoinReceiver {
 	 * </ol>
 	 * @param weight the weight of the coin received&#46;
 	 */
-	public void receiveCoin(double weight){
+	public void receiveCoin(ValidateItem validateItem){
 		CashStore cashStore=(CashStore)txCtrl.getMainController().getStoreController().getStore(Store.CASH);
 		Coin coin=null;
 		int idx;
 		idx=cashStore.forEach((StoreItem item)->{
-			Coin current = (Coin) item.getContent();
-			if (current.getWeight() == weight){
-				return false;
-			}
-		
-			return true;
+
+			return this.mondyValidater.validate((Coin) item.getContent(), validateItem);
 		});
 		
 		
