@@ -65,8 +65,10 @@ public class TransactionController {
 	public TransactionController(MainController mainCtrl) {
 		this.mainCtrl = mainCtrl;
 		dispenseCtrl=new DispenseController(this);
+		
 		MoneyValidateStrategy mondyValidater = new WeightStrategy();
 		coinReceiver=new CoinReceiver(this, mondyValidater);
+		
 		changeGiver=new ChangeGiver(this);
 		
 		selectDrinkState = new SelectDrinkState(this);
